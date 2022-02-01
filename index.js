@@ -53,16 +53,17 @@ client.on("messageCreate", message => {
         if (!message.member.voice.channel) return message.channel.send('You need to be a voice channel to execute this command!')
         if(!message.member.voice.channel.joinable) return message.channel.send('I need permission to join your voice channel!')
         
-        const lofiUrls = ["https://www.youtube.com/watch?v=lTRiuFIWV54&t=18s",
-                          "https://www.youtube.com/watch?v=W6YI3ZFOL0A&t=9s",
+        const lofiUrls = ["https://www.youtube.com/watch?v=lTRiuFIWV54&",
+                          "https://www.youtube.com/watch?v=W6YI3ZFOL0A&",
                           "https://www.youtube.com/watch?v=FFfdyV8gnWk",
-                          "https://www.youtube.com/watch?v=ldUT4FLxql4&t=353s",
+                          "https://www.youtube.com/watch?v=ldUT4FLxql4&",
                           "https://www.youtube.com/watch?v=qCa64XOO5Ng",
                           "https://www.youtube.com/watch?v=uzX6Mu-sCfA",
                           "https://www.youtube.com/watch?v=dLmyp3xMsAo"]
 
-        var randomLofi = lofiUrls[Math.floor(Math.random() * lofiUrls.length)]
+        const randomLofi = lofiUrls[Math.floor(Math.random() * lofiUrls.length)]
         const stream = ytdl(randomLofi);
+        console.log("Now playing " + randomLofi)
         const resource = createAudioResource(stream);
 
         const connection = joinVoiceChannel({
@@ -77,13 +78,14 @@ client.on("messageCreate", message => {
         
         // Plays random from lofiUrls on player idle
         player.on(AudioPlayerStatus.Idle, () => {
-            var randomLofi = lofiUrls[Math.floor(Math.random() * lofiUrls.length)]
+            const randomLofi = lofiUrls[Math.floor(Math.random() * lofiUrls.length)]
             const stream = ytdl(randomLofi);
+            console.log("Now playing " + randomLofi)
             const resource = createAudioResource(stream);
             player.play(resource);
         });
 
-        player.on("error", () => message.channel.send("There was an error"));
+        player.on("error", () => console.log("There was an error"));
     }
 
     if(message.content.startsWith("!pause")){
