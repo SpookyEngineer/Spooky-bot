@@ -128,27 +128,6 @@ client.on("messageCreate", message => {
         message.reply("You have payed respects")
       }
 
-    if(message.content.startsWith("rapaz") || message.content.startsWith("Rapaz")){
-
-        const resource = createAudioResource("Sounds/Rapaz.3gp")
-
-        const connection = joinVoiceChannel({
-            channelId: message.member.voice.channel.id,
-            guildId: message.guild.id,
-            adapterCreator: message.guild.voiceAdapterCreator
-        })
-        // Plays song (Requires FFmpeg)
-        player.play(resource);
-        connection.subscribe(player);
-        
-        setTimeout(() => {
-            connection.destroy()
-        }, 3000);
-        
-        player.on("error", () => message.channel.send("There was an error"));
-
-    }
-
 })
 
 client.on("ready", () => {
