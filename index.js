@@ -18,7 +18,6 @@ const { joinVoiceChannel,
         AudioPlayerStatus 
 } = require('@discordjs/voice');
 
-
 const player = createAudioPlayer();
 
 // Functions that execute on message content
@@ -47,6 +46,7 @@ client.on("messageCreate", message => {
         
         player.on("error", () => message.channel.send("There was an error"));
     }
+
     // Lofi player
     if(message.content.includes("!lofi")){
 
@@ -71,6 +71,7 @@ client.on("messageCreate", message => {
             guildId: message.guild.id,
             adapterCreator: message.guild.voiceAdapterCreator
         })
+
         // Plays song (Requires FFmpeg)
         message.channel.send("Playing lofi!")
         player.play(resource);
@@ -88,6 +89,7 @@ client.on("messageCreate", message => {
         player.on("error", () => console.log("There was an error"));
     }
 
+    // Pause and unpause
     if(message.content.startsWith("!pause")){
         const connection = getVoiceConnection(message.guild.id)
         if(!connection) return message.channel.send("I'm not in a voice channel!")
@@ -108,30 +110,47 @@ client.on("messageCreate", message => {
         console.log('Disconnected from voice!')
     }
 
-    if(message.content === "ping"){
+    if(message.content.toLocaleLowerCase() === "ping"){
         message.reply("pong")
     }
-    if(message.content === "pong"){
+    if(message.content.toLocaleLowerCase() === "pong"){
         message.reply("ping")
     }
 
-    if(message.content === "F" || message.content === "f") {
+    if(message.content.toLocaleLowerCase() === "marco"){
+        message.reply("polo")
+    }
+    if(message.content.toLocaleLowerCase() === "polo"){
+        message.reply("marco")
+    }
+
+    if(message.content.toLocaleLowerCase() === "f") {
         message.reply("You have payed respects")
       }
 
-    if(message.content.startsWith("!inspire")){
-        getQuote().then(quote => message.channel.send(quote))
+    if(message.content.startsWith("rapaz") || message.content.startsWith("Rapaz")){
+
+        const resource = createAudioResource("Sounds/Rapaz.3gp")
+
+        const connection = joinVoiceChannel({
+            channelId: message.member.voice.channel.id,
+            guildId: message.guild.id,
+            adapterCreator: message.guild.voiceAdapterCreator
+        })
+        // Plays song (Requires FFmpeg)
+        player.play(resource);
+        connection.subscribe(player);
+        
+        setTimeout(() => {
+            connection.destroy()
+        }, 3000);
+        
+        player.on("error", () => message.channel.send("There was an error"));
+
     }
+
 })
 
-// Fetches random quote from api
-function getQuote(){
-    return fetch("https://zenquotes.io/api/random")
-    .then(response => response.json())
-    .then(data => {
-        return data[0]["q"] + " -" + data[0]["a"]
-    }).catch(message.channel.send("There was an error"))
-}
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)
 })
